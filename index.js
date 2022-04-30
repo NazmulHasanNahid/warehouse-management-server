@@ -33,6 +33,12 @@ async function run() {
       res.send(products)
 
     })
+    app.post('/products' , async(req,res)=>{
+      const newProducts = req.body ;
+      const result = await productCollection.insertOne(newProducts)
+      res.send(result)
+    })
+
     app.delete('/products/:id' , async(req,res)=>{
       const id = req.params.id ;
       const query = {_id: ObjectId(id)}
@@ -46,7 +52,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Were house server runnig");
+  res.send("Werehouse server runnig");
 });
 
 app.listen(port, () => {
