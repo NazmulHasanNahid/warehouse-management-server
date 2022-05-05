@@ -22,8 +22,9 @@ async function run() {
     await client.connect();
     const productCollection = client.db("warehouse").collection("products");
     app.get("/products", async (req, res) => {
+         const q = req.query
          const query = {} 
-         const cursor = productCollection.find(query)
+         const cursor = productCollection.find(q)
          const products = await cursor.toArray()
          res.send(products)
     });
@@ -34,11 +35,39 @@ async function run() {
       res.send(products)
 
     })
+
+    app.get('/userAddedItem' , async (req, res)=>{
+        const email = req.query.email;
+        console.log(email);
+        const query = {email:email} ;
+        const cursor = productCollection.find(query)
+        const items = await cursor.toArray()
+        res.send(items)
+    })
     app.post('/products' , async(req,res)=>{
       const newProducts = req.body ;
       const result = await productCollection.insertOne(newProducts)
       res.send(result)
     })
+
+
+     app.put('/quantity/:id' , async(req,res)=>{
+      const id = req.params.id;
+      const data = req.body;
+      const filter = {_id: ObjectId(id)}
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          quantity : data.quantity 
+        }
+      };
+      const result = await productCollection.updateOne(filter ,updatedDoc , options)
+      res.send(result)
+
+      
+     })
+
+
 
     app.delete('/product/:id' , async(req,res)=>{
       const id = req.params.id ;
