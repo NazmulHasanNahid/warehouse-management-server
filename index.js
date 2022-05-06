@@ -21,6 +21,7 @@ async function run() {
   try {
     await client.connect();
     const productCollection = client.db("warehouse").collection("products");
+    const categoriesCollection = client.db("warehouse").collection("categories");
     app.get("/products", async (req, res) => {
          const q = req.query
          const query = {} 
@@ -28,6 +29,7 @@ async function run() {
          const products = await cursor.toArray()
          res.send(products)
     });
+    
     app.get('/products/:id' , async(req,res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
@@ -43,6 +45,14 @@ async function run() {
         const cursor = productCollection.find(query)
         const items = await cursor.toArray()
         res.send(items)
+    })
+    app.get('/categories' , async(req,res)=>{
+      const q = req.query
+      const query = {} 
+      const cursor = categoriesCollection.find(q)
+      const categories = await cursor.toArray()
+      res.send(categories)
+
     })
     app.post('/products' , async(req,res)=>{
       const newProducts = req.body ;
