@@ -64,7 +64,7 @@ async function run() {
       res.send(products)
 
     })
-   //user based item api
+   //user based get item api
     app.get('/userAddedItem' , verifyJWT , async (req, res)=>{
         const decodedEmail = req.decoded.email
         const email = req.query.email;
@@ -78,7 +78,7 @@ async function run() {
           res.status(403).send({message:'forbidden access'})
         }
     })
-    //catrgories item api
+    //catrgories get item api
     app.get('/categories' , async(req,res)=>{
       const q = req.query
       const query = {} 
